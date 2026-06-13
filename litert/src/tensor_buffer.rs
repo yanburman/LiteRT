@@ -51,10 +51,9 @@ impl TensorShape {
 
 /// A memory buffer bound to a compiled tensor.
 ///
-/// Most users obtain one from
-/// [`CompiledModel`](crate::CompiledModel)-derived helpers (coming in a later
-/// phase) or via [`Self::managed_host`], and only lock it to read/write the
-/// underlying data with a strongly typed slice.
+/// Obtain one via [`Self::managed_host`] (LiteRT-allocated) or
+/// [`Self::from_host_ptr`] (caller-owned memory, no copy). Lock it to
+/// read/write the underlying data with a strongly typed slice.
 pub struct TensorBuffer {
     ptr: NonNull<sys::LiteRtTensorBufferT>,
 }
@@ -68,6 +67,37 @@ impl std::fmt::Debug for TensorBuffer {
 }
 
 impl TensorBuffer {
+    /// Wraps an externally-owned host-memory region as a non-owning `TensorBuffer`.
+    ///
+    /// LiteRT does not take ownership of the memory: the caller is responsible for
+    /// keeping `ptr` valid for the entire lifetime of the returned `TensorBuffer`.
+    /// No deallocator is registered — dropping this buffer does **not** free `ptr`.
+    ///
+    /// # Safety
+    /// `ptr` must be valid, non-null, and point to at least `size_bytes` bytes of
+    /// accessible memory for the entire lifetime of the returned `TensorBuffer`.
+    ///
+    /// # Errors
+    /// Returns [`Error::Status`](crate::Error::Status) if LiteRT rejects the buffer.
+    pub unsafe fn from_host_ptr(
+        ptr: *mut std::ffi::c_void,
+        size_bytes: usize,
+        shape: &TensorShape,
+    ) -> Result<Self> {
+        let raw_type = shape.to_raw();
+        let mut raw: sys::LiteRtTensorBuffer = std::ptr::null_mut();
+        check(unsafe {
+            sys::LiteRtCreateTensorBufferFromHostMemory(
+                &raw_type, ptr, size_bytes,
+                None, // null deallocator — caller owns the memory
+                &mut raw,
+            )
+        })?;
+        Ok(Self {
+            ptr: NonNull::new(raw).ok_or(Error::NullPointer)?,
+        })
+    }
+
     /// Allocates a managed host-memory tensor buffer of the given shape.
     ///
     /// # Errors
