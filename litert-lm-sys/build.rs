@@ -219,13 +219,7 @@ fn ensure_prebuilt(pb: &Prebuilt, cache_dir: &Path) {
     }
 }
 
-fn ensure_dylib(
-    url_filename: &str,
-    local_name: &str,
-    sha256: &str,
-    size: u64,
-    cache_dir: &Path,
-) {
+fn ensure_dylib(url_filename: &str, local_name: &str, sha256: &str, size: u64, cache_dir: &Path) {
     let dest = cache_dir.join(local_name);
     let marker = cache_dir.join(format!("{local_name}.verified"));
     if dest.exists() && marker.exists() {

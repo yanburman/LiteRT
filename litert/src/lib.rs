@@ -5,7 +5,7 @@
 //!
 //! # fn main() -> litert::Result<()> {
 //! let env     = Environment::new()?;
-//! let model   = Model::from_file("mobilenet_v1.tflite")?;
+//! let model   = Model::from_file(&env, "mobilenet_v1.tflite")?;
 //! let options = CompilationOptions::new()?;
 //! let compiled = CompiledModel::new(env, model, &options)?;
 //! # Ok(()) }

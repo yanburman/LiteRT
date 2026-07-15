@@ -42,14 +42,14 @@ pub enum LogSeverity {
 impl LogSeverity {
     #[cfg(not(target_arch = "wasm32"))]
     fn to_raw(self) -> sys::LiteRtLogSeverity {
-        match self {
+        (match self {
             Self::Debug => sys::kLiteRtLogSeverityDebug,
             Self::Verbose => sys::kLiteRtLogSeverityVerbose,
             Self::Info => sys::kLiteRtLogSeverityInfo,
             Self::Warning => sys::kLiteRtLogSeverityWarning,
             Self::Error => sys::kLiteRtLogSeverityError,
             Self::Silent => sys::kLiteRtLogSeveritySilent,
-        }
+        }) as sys::LiteRtLogSeverity
     }
 }
 

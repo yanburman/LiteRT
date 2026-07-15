@@ -4,7 +4,7 @@ use std::{ffi::CString, path::Path, ptr::NonNull, sync::Arc};
 
 use litert_sys as sys;
 
-use crate::{check, Error, Result};
+use crate::{check, Environment, Error, Result};
 
 /// An immutable, reference-counted handle to a parsed LiteRT model.
 ///
@@ -49,10 +49,11 @@ impl Model {
     /// # Example
     ///
     /// ```no_run
-    /// let model = litert::Model::from_file("mobilenet_v1.tflite")?;
+    /// let env = litert::Environment::new()?;
+    /// let model = litert::Model::from_file(&env, "mobilenet_v1.tflite")?;
     /// # Ok::<(), litert::Error>(())
     /// ```
-    pub fn from_file(path: impl AsRef<Path>) -> Result<Self> {
+    pub fn from_file(env: &Environment, path: impl AsRef<Path>) -> Result<Self> {
         let path = path.as_ref();
         let path_str = path
             .to_str()
@@ -60,7 +61,7 @@ impl Model {
         let cstr = CString::new(path_str).map_err(|_| Error::InvalidPath(path.to_path_buf()))?;
 
         let mut raw: sys::LiteRtModel = std::ptr::null_mut();
-        check(unsafe { sys::LiteRtCreateModelFromFile(cstr.as_ptr(), &mut raw) })?;
+        check(unsafe { sys::LiteRtCreateModelFromFile(env.as_raw(), cstr.as_ptr(), &mut raw) })?;
         let ptr = NonNull::new(raw).ok_or(Error::NullPointer)?;
         Ok(Self {
             inner: Arc::new(ModelInner {
@@ -83,15 +84,21 @@ impl Model {
     /// # Example
     ///
     /// ```no_run
+    /// let env = litert::Environment::new()?;
     /// let bytes = std::fs::read("mobilenet_v1.tflite")?;
-    /// let model = litert::Model::from_bytes(bytes)?;
+    /// let model = litert::Model::from_bytes(&env, bytes)?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
-    pub fn from_bytes(bytes: impl Into<Box<[u8]>>) -> Result<Self> {
+    pub fn from_bytes(env: &Environment, bytes: impl Into<Box<[u8]>>) -> Result<Self> {
         let bytes: Box<[u8]> = bytes.into();
         let mut raw: sys::LiteRtModel = std::ptr::null_mut();
         check(unsafe {
-            sys::LiteRtCreateModelFromBuffer(bytes.as_ptr().cast(), bytes.len(), &mut raw)
+            sys::LiteRtCreateModelFromBuffer(
+                env.as_raw(),
+                bytes.as_ptr().cast(),
+                bytes.len(),
+                &mut raw,
+            )
         })?;
         let ptr = NonNull::new(raw).ok_or(Error::NullPointer)?;
         Ok(Self {

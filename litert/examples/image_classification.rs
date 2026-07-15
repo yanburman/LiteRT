@@ -29,7 +29,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let model_path = ensure_model()?;
 
     let env = Environment::new()?;
-    let model = Model::from_file(&model_path)?;
+    let model = Model::from_file(&env, &model_path)?;
     let sig = model.signature(0)?;
 
     // Allocate I/O buffers matching the model's declared shapes.

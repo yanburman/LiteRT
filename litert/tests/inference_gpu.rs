@@ -27,7 +27,7 @@ fn add_10x10_gpu_or_cpu_fallback() {
     let _ = set_global_log_severity(LogSeverity::Error);
 
     let env = Environment::new().expect("environment");
-    let model = Model::from_file(fixture_path()).expect("load tflite");
+    let model = Model::from_file(&env, fixture_path()).expect("load tflite");
 
     let sig = model.signature(0).expect("signature 0");
     assert_eq!(sig.input_count().unwrap(), 2);

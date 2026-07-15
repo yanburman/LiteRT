@@ -24,7 +24,7 @@ fn fixture_path() -> PathBuf {
 fn add_10x10_cpu_elementwise_sum() {
     let _ = set_global_log_severity(LogSeverity::Error);
     let env = Environment::new().expect("environment");
-    let model = Model::from_file(fixture_path()).expect("load tflite");
+    let model = Model::from_file(&env, fixture_path()).expect("load tflite");
 
     // Sanity-check the model's declared shape through the signature API.
     let sig = model.signature(0).expect("signature 0");

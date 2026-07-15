@@ -58,7 +58,7 @@ impl CompiledModel {
     /// use litert::{CompilationOptions, CompiledModel, Environment, Model};
     ///
     /// let env = Environment::new()?;
-    /// let model = Model::from_file("model.tflite")?;
+    /// let model = Model::from_file(&env, "model.tflite")?;
     /// let compiled = CompiledModel::new(env, model, &CompilationOptions::new()?)?;
     /// # Ok::<(), litert::Error>(())
     /// ```

@@ -15,7 +15,8 @@ use crate::{check, Error, Model, Result, TensorShape};
 /// # Example
 ///
 /// ```no_run
-/// let model = litert::Model::from_file("model.tflite")?;
+/// let env = litert::Environment::new()?;
+/// let model = litert::Model::from_file(&env, "model.tflite")?;
 /// let sig = model.signature(0)?;
 /// for i in 0..sig.input_count()? {
 ///     println!("input {i}: {:?}", sig.input_shape(i)?);

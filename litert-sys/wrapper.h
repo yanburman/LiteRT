@@ -1,7 +1,7 @@
 // Aggregates the LiteRT 2.x C API surface for bindgen.
 //
-// Pinned to LiteRT v2.1.4 headers vendored at
-//   third_party/litert-v2.1.4/litert/c/
+// Pinned to LiteRT v2.1.6 headers vendored at
+//   third_party/litert-v2.1.6/litert/c/
 //
 // GL / OpenCL / WebGPU support is intentionally left OFF
 // (LITERT_HAS_{OPENGL,OPENCL,WEBGPU}_SUPPORT undefined) so bindgen parses

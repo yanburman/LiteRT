@@ -37,8 +37,9 @@ fn compilation_options_accept_gpu_bit() {
 
 #[test]
 fn model_from_file_missing_returns_status_error() {
-    let err =
-        Model::from_file("/definitely/does/not/exist.tflite").expect_err("missing file must fail");
+    let env = Environment::new().expect("env");
+    let err = Model::from_file(&env, "/definitely/does/not/exist.tflite")
+        .expect_err("missing file must fail");
     let Error::Status { message, .. } = err else {
         panic!("expected Error::Status, got {err:?}");
     };

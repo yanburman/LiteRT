@@ -5,29 +5,37 @@ use litert_sys as sys;
 /// Scalar element type of a tensor, in one-to-one correspondence with the
 /// LiteRT C enum `LiteRtElementType`. Variant names track the Rust primitive
 /// types or IEEE/INT naming (`Float16`, `Int32`) where no Rust analogue exists.
+///
+/// Discriminants are the literal `LiteRtElementType` wire values (stable
+/// across 2.1.4–2.1.6, per the upstream header's `// kTfLiteXxx` comments)
+/// rather than `sys::kLiteRtElementTypeXxx` — bindgen infers a *different*
+/// Rust type for those constants depending on the target ABI it's generating
+/// for (`c_int` under MSVC, `c_uint` under Itanium/Linux/Android/macOS, for
+/// this specific plain C enum), which doesn't match a single fixed `#[repr]`
+/// here. Literal values sidestep that entirely.
 #[allow(missing_docs)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum ElementType {
-    None = sys::kLiteRtElementTypeNone,
-    Bool = sys::kLiteRtElementTypeBool,
-    Int2 = sys::kLiteRtElementTypeInt2,
-    Int4 = sys::kLiteRtElementTypeInt4,
-    Int8 = sys::kLiteRtElementTypeInt8,
-    Int16 = sys::kLiteRtElementTypeInt16,
-    Int32 = sys::kLiteRtElementTypeInt32,
-    Int64 = sys::kLiteRtElementTypeInt64,
-    UInt8 = sys::kLiteRtElementTypeUInt8,
-    UInt16 = sys::kLiteRtElementTypeUInt16,
-    UInt32 = sys::kLiteRtElementTypeUInt32,
-    UInt64 = sys::kLiteRtElementTypeUInt64,
-    Float16 = sys::kLiteRtElementTypeFloat16,
-    BFloat16 = sys::kLiteRtElementTypeBFloat16,
-    Float32 = sys::kLiteRtElementTypeFloat32,
-    Float64 = sys::kLiteRtElementTypeFloat64,
-    Complex64 = sys::kLiteRtElementTypeComplex64,
-    Complex128 = sys::kLiteRtElementTypeComplex128,
+    None = 0,
+    Bool = 6,
+    Int2 = 20,
+    Int4 = 18,
+    Int8 = 9,
+    Int16 = 7,
+    Int32 = 2,
+    Int64 = 4,
+    UInt8 = 3,
+    UInt16 = 17,
+    UInt32 = 16,
+    UInt64 = 13,
+    Float16 = 10,
+    BFloat16 = 19,
+    Float32 = 1,
+    Float64 = 11,
+    Complex64 = 8,
+    Complex128 = 12,
 }
 
 impl ElementType {

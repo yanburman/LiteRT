@@ -23,7 +23,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .join("add_10x10.tflite");
 
     let env = Environment::new()?;
-    let model = Model::from_file(&model_path)?;
+    let model = Model::from_file(&env, &model_path)?;
     let sig = model.signature(0)?;
 
     // Allocate buffers matching the shapes the model declares.

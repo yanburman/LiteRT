@@ -25,10 +25,19 @@ use serde::Deserialize;
 use sha2::{Digest, Sha256};
 
 const LITERT_LM_TAG: &str = "v0.10.2";
+// NOTE: intentionally NOT bumped to 2.1.6 alongside LITERT_HEADERS_VERSION.
+// Bumping this requires downloading the real litert-2.1.6.aar from Google
+// Maven and re-pinning ANDROID_AAR_SHA256/ANDROID_AAR_SIZE below — this repo
+// checkout had no network access to do that. Until it's bumped, the
+// *default* (no LITERT_LIB_DIR override) Android build path is
+// inconsistent: 2.1.6-generated bindings linked against a 2.1.4 native AAR,
+// which reproduces the same argument-shift ABI break this branch exists to
+// fix. Every consumer on this branch MUST set LITERT_LIB_DIR to a real 2.1.6
+// libLiteRt.so (cam_poc already does this).
 const LITERT_MAVEN_VERSION: &str = "2.1.4";
 
 #[cfg(feature = "generate-bindings")]
-const LITERT_HEADERS_VERSION: &str = "2.1.4";
+const LITERT_HEADERS_VERSION: &str = "2.1.6";
 
 /// A single prebuilt file pinned by SHA-256 (which is the Git LFS OID, so the
 /// same string serves as both the content address for the download request
@@ -221,6 +230,7 @@ fn main() {
     println!("cargo:rerun-if-env-changed=LITERT_LIB_DIR");
     println!("cargo:rerun-if-env-changed=LITERT_NO_DOWNLOAD");
     println!("cargo:rerun-if-env-changed=LITERT_CACHE_DIR");
+    println!("cargo:rerun-if-env-changed=LITERT_SYS_BINDGEN_ABI");
 
     let target = env::var("TARGET").expect("TARGET env var missing");
     let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR env var missing"));
@@ -233,6 +243,28 @@ fn main() {
 #[cfg(feature = "generate-bindings")]
 fn emit_bindings(_target: &str, out_dir: &Path) {
     generate_bindings(out_dir);
+}
+
+// Bitfield-bearing structs (currently just `LiteRtLayout`: a 7-bit `rank` +
+// 1-bit `has_strides` ahead of a fixed-size `dimensions` array) pack
+// differently under MSVC vs the Itanium ABI (Linux/Android/macOS all use the
+// latter) — confirmed by litert_layout.h's own `static_assert`s, which pin
+// `offsetof(dimensions)` to 4 on non-MSVC and 8 on MSVC. bindgen inherits
+// whatever ABI libclang's *default* target uses, so running it natively on a
+// Windows host silently produces the MSVC (wrong, for every non-Windows
+// target) layout unless told otherwise. Every other declaration in this API
+// (plain pointers/ints/enums) is ABI-portable and unaffected — this is the
+// one place target actually matters.
+//
+// Set LITERT_SYS_BINDGEN_ABI=itanium when generating the bindings that will
+// ship for Linux/Android/macOS from a Windows host; leave unset (or "msvc")
+// when generating the Windows binding file.
+#[cfg(feature = "generate-bindings")]
+fn bindgen_abi_clang_arg() -> Option<&'static str> {
+    match std::env::var("LITERT_SYS_BINDGEN_ABI").as_deref() {
+        Ok("itanium") => Some("--target=x86_64-unknown-linux-gnu"),
+        _ => None,
+    }
 }
 
 #[cfg(not(feature = "generate-bindings"))]
@@ -265,12 +297,16 @@ fn generate_bindings(out_dir: &Path) {
         headers_dir.display()
     );
 
-    bindgen::Builder::default()
+    let mut builder = bindgen::Builder::default()
         .header(manifest_dir.join("wrapper.h").to_string_lossy())
         .clang_arg(format!("-I{}", headers_dir.display()))
         // LiteRT uses `typedef enum : int8_t { ... }` (C23 typed enums) in a
         // few headers — e.g. litert_logging.h. Default C dialect rejects it.
-        .clang_arg("-std=gnu2x")
+        .clang_arg("-std=gnu2x");
+    if let Some(abi_arg) = bindgen_abi_clang_arg() {
+        builder = builder.clang_arg(abi_arg);
+    }
+    builder
         .allowlist_function("LiteRt.*")
         .allowlist_type("LiteRt.*")
         .allowlist_type("kLiteRt.*")
