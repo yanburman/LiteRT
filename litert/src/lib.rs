@@ -29,7 +29,7 @@ pub use environment::Environment;
 pub use error::{Error, Result};
 pub use logging::{set_global_log_severity, LogSeverity};
 pub use model::Model;
-pub use options::{Accelerators, CompilationOptions};
+pub use options::{Accelerators, CompilationOptions, GpuOptions};
 pub use signature::Signature;
 pub use tensor_buffer::{ReadGuard, TensorBuffer, TensorShape, WriteGuard};
 
