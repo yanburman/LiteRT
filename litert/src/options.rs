@@ -246,6 +246,16 @@ impl GpuOptions {
         Ok(())
     }
 
+    /// Appends a `key = true` / `key = false` TOML line. The runtime parses
+    /// these with `ParseTomlBool` (`litert/core/litert_toml_parser.cc`), which
+    /// expects the bare, unquoted lowercase spelling.
+    fn set_bool_field(&mut self, key: &str, value: bool) {
+        self.toml.push_str(key);
+        self.toml.push_str(" = ");
+        self.toml.push_str(if value { "true" } else { "false" });
+        self.toml.push('\n');
+    }
+
     /// Sets the on-disk directory the GPU delegate uses for program-cache
     /// serialization. Should be a private, writable app directory (e.g.
     /// Android's `Context.getCodeCacheDir()`). Whether serialization actually
@@ -300,9 +310,7 @@ impl GpuOptions {
     /// the delegate serializes the compiled GPU program so future compiles
     /// against the same cache can skip recompilation.
     pub fn set_serialize_program_cache(&mut self, enable: bool) {
-        self.toml.push_str("serialize_program_cache = ");
-        self.toml.push_str(if enable { "true" } else { "false" });
-        self.toml.push('\n');
+        self.set_bool_field("serialize_program_cache", enable);
     }
 
     /// Builder-style [`Self::set_serialize_program_cache`].
@@ -310,5 +318,105 @@ impl GpuOptions {
     pub fn with_serialize_program_cache(mut self, enable: bool) -> Self {
         self.set_serialize_program_cache(enable);
         self
+    }
+
+    /// When `true`, the delegate prefers textures over buffers for weight
+    /// storage. Whether this is faster is device-specific — the hint is
+    /// consumed inside ML Drift's kernel selection
+    /// (`ModelHints::kPreferTextureWeights`), so it is worth setting only
+    /// where it has been measured to win. Defaults to `false` in the
+    /// delegate.
+    pub fn set_prefer_texture_weights(&mut self, enable: bool) {
+        self.set_bool_field("prefer_texture_weights", enable);
+    }
+
+    /// Builder-style [`Self::set_prefer_texture_weights`].
+    #[must_use]
+    pub fn with_prefer_texture_weights(mut self, enable: bool) -> Self {
+        self.set_prefer_texture_weights(enable);
+        self
+    }
+
+    /// Hints that the model is fully delegated to this one delegate, which
+    /// sets `kTfLiteDelegateFlagsHintFullyDelegatedToSingleDelegate` on the
+    /// delegate. TFLite then skips the whole-graph `PrepareOpsStartingAt`
+    /// pass it would otherwise run purely to detect dynamic-sized tensors
+    /// (`tensorflow/lite/core/subgraph.cc`), which shortens compile time.
+    ///
+    /// Only set this when the model really is fully delegated *and* has
+    /// static shapes: the skipped pass is what would otherwise reject a
+    /// dynamic-shaped graph given to a static-only delegate.
+    pub fn set_hint_fully_delegated_to_single_delegate(&mut self, enable: bool) {
+        self.set_bool_field("hint_fully_delegated_to_single_delegate", enable);
+    }
+
+    /// Builder-style [`Self::set_hint_fully_delegated_to_single_delegate`].
+    #[must_use]
+    pub fn with_hint_fully_delegated_to_single_delegate(mut self, enable: bool) -> Self {
+        self.set_hint_fully_delegated_to_single_delegate(enable);
+        self
+    }
+
+    /// When `true`, the delegate `madvise`s the original weight tensors once
+    /// it has uploaded them, releasing the CPU-side copy.
+    ///
+    /// Worth setting explicitly to `true` by any caller that attaches GPU
+    /// options at all: the OpenCL/Vulkan/WebGPU delegates default this to
+    /// `true` internally, but `LrtGetGpuAcceleratorCompilationOptions-
+    /// MadviseOriginalSharedTensors` falls back to `false` when the field is
+    /// unset, and `ml_drift_delegate_create.cc` applies that fallback over the
+    /// delegate's own default whenever a payload is present. So attaching a
+    /// payload for any *other* reason silently disables madvise unless this is
+    /// set. (Only observable on the paths that upload shared/streamed
+    /// constants — i.e. with `enable_constant_tensors_sharing` or a weight
+    /// loader.)
+    pub fn set_madvise_original_shared_tensors(&mut self, enable: bool) {
+        self.set_bool_field("madvise_original_shared_tensors", enable);
+    }
+
+    /// Builder-style [`Self::set_madvise_original_shared_tensors`].
+    #[must_use]
+    pub fn with_madvise_original_shared_tensors(mut self, enable: bool) -> Self {
+        self.set_madvise_original_shared_tensors(enable);
+        self
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn bool_fields_serialize_unquoted_lowercase() {
+        let opts = GpuOptions::new()
+            .with_serialize_program_cache(true)
+            .with_prefer_texture_weights(false)
+            .with_hint_fully_delegated_to_single_delegate(true)
+            .with_madvise_original_shared_tensors(true);
+        assert_eq!(
+            opts.toml,
+            "serialize_program_cache = true\n\
+             prefer_texture_weights = false\n\
+             hint_fully_delegated_to_single_delegate = true\n\
+             madvise_original_shared_tensors = true\n"
+        );
+    }
+
+    #[test]
+    fn string_and_bool_fields_compose() {
+        let opts = GpuOptions::new()
+            .with_model_cache_key("yolo26n_w8a32")
+            .expect("model cache key")
+            .with_prefer_texture_weights(true);
+        assert_eq!(
+            opts.toml,
+            "model_cache_key = \"yolo26n_w8a32\"\n\
+             prefer_texture_weights = true\n"
+        );
+    }
+
+    #[test]
+    fn string_field_rejects_unquotable_characters() {
+        assert!(GpuOptions::new().with_model_cache_key("bad\"key").is_err());
     }
 }
