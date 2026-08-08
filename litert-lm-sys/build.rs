@@ -103,7 +103,7 @@ fn emit_bindings(_target: &str, out_dir: &Path) {
         headers_dir.display()
     );
 
-    bindgen::Builder::default()
+    let bindings = bindgen::Builder::default()
         .header(manifest_dir.join("wrapper.h").to_string_lossy())
         .clang_arg(format!("-I{}", headers_dir.display()))
         .allowlist_function("litert_lm_.*")
@@ -118,9 +118,24 @@ fn emit_bindings(_target: &str, out_dir: &Path) {
         .derive_debug(true)
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
-        .expect("bindgen failed")
-        .write_to_file(out_dir.join("bindings.rs"))
-        .expect("write bindings.rs");
+        .expect("bindgen failed");
+
+    fs::write(
+        out_dir.join("bindings.rs"),
+        unsafe_extern_blocks(&bindings.to_string()),
+    )
+    .expect("write bindings.rs");
+}
+
+// bindgen 0.69 predates edition-2024 support and still emits bare
+// `extern "C" { ... }` blocks, which edition 2024 rejects outright
+// (`missing_unsafe_on_extern` is a hard error there). Re-emit each block
+// header with the `unsafe` qualifier. Only block headers start a line with
+// `extern "C" {`; function-pointer types are already `unsafe extern "C" fn`
+// and are left alone.
+#[cfg(feature = "generate-bindings")]
+fn unsafe_extern_blocks(bindings: &str) -> String {
+    bindings.replace("\nextern \"C\" {", "\nunsafe extern \"C\" {")
 }
 
 #[cfg(not(feature = "generate-bindings"))]

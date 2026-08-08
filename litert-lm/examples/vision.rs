@@ -14,7 +14,8 @@ const MODEL_REPO: &str = "litert-community/gemma-4-E2B-it-litert-lm";
 const MODEL_FILE: &str = "gemma-4-E2B-it.litertlm";
 
 fn main() -> Result<(), Box<dyn Error>> {
-    std::env::set_var("TF_CPP_MIN_LOG_LEVEL", "3");
+    // SAFETY: single-threaded — nothing else has been spawned yet.
+    unsafe { std::env::set_var("TF_CPP_MIN_LOG_LEVEL", "3") };
 
     let args: Vec<String> = std::env::args().skip(1).collect();
     let use_cpu = args.iter().any(|a| a == "--cpu");

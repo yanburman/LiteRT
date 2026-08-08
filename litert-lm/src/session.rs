@@ -143,15 +143,21 @@ impl Session {
             is_final: bool,
             error_msg: *const c_char,
         ) {
-            let state = &mut *(data as *mut State);
+            // SAFETY: `data` is the `&mut State` handed to the C API below,
+            // which outlives the call and is only touched from this callback.
+            let state = unsafe { &mut *(data as *mut State) };
             if !error_msg.is_null() {
-                state.error = Some(CStr::from_ptr(error_msg).to_string_lossy().into_owned());
+                // SAFETY: non-null, NUL-terminated string owned by the C API
+                // for the duration of the callback.
+                let msg = unsafe { CStr::from_ptr(error_msg) };
+                state.error = Some(msg.to_string_lossy().into_owned());
                 *state.done.lock().unwrap() = true;
                 state.cond.notify_one();
                 return;
             }
             if !chunk.is_null() {
-                let s = CStr::from_ptr(chunk).to_string_lossy();
+                // SAFETY: as above — non-null, NUL-terminated, C-owned.
+                let s = unsafe { CStr::from_ptr(chunk) }.to_string_lossy();
                 (state.cb)(s.as_ref());
             }
             if is_final {

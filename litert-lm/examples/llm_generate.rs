@@ -17,7 +17,8 @@ const MODEL_FILE: &str = "Qwen3-0.6B.litertlm";
 
 fn main() -> Result<(), Box<dyn Error>> {
     // Must be set before any LiteRT code runs — TFLite reads it during init.
-    std::env::set_var("TF_CPP_MIN_LOG_LEVEL", "3");
+    // SAFETY: single-threaded — nothing else has been spawned yet.
+    unsafe { std::env::set_var("TF_CPP_MIN_LOG_LEVEL", "3") };
 
     let args: Vec<String> = std::env::args().skip(1).collect();
 

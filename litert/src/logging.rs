@@ -153,5 +153,6 @@ fn resolve_logger_hooks() -> Option<LoggerHooks> {
 
 #[cfg(not(target_arch = "wasm32"))]
 unsafe fn lib_get<'a, T>(lib: &'a libloading::Library, name: &[u8]) -> Option<Symbol<'a, T>> {
-    lib.get(name).ok()
+    // SAFETY: the caller guarantees `T` matches the symbol's real signature.
+    unsafe { lib.get(name) }.ok()
 }

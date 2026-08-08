@@ -69,25 +69,25 @@ impl Default for LiteRtLmSamplerParams {
         }
     }
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_session_config_create() -> *mut LiteRtLmSessionConfig;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_session_config_set_max_output_tokens(
         config: *mut LiteRtLmSessionConfig,
         max_output_tokens: ::std::os::raw::c_int,
     );
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_session_config_set_sampler_params(
         config: *mut LiteRtLmSessionConfig,
         sampler_params: *const LiteRtLmSamplerParams,
     );
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_session_config_delete(config: *mut LiteRtLmSessionConfig);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_conversation_config_create(
         engine: *mut LiteRtLmEngine,
         session_config: *const LiteRtLmSessionConfig,
@@ -97,10 +97,10 @@ extern "C" {
         enable_constrained_decoding: bool,
     ) -> *mut LiteRtLmConversationConfig;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_conversation_config_delete(config: *mut LiteRtLmConversationConfig);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_set_min_log_level(level: ::std::os::raw::c_int);
 }
 pub const kInputText: InputDataType = 0;
@@ -125,7 +125,7 @@ impl Default for InputData {
         }
     }
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_settings_create(
         model_path: *const ::std::os::raw::c_char,
         backend_str: *const ::std::os::raw::c_char,
@@ -133,137 +133,137 @@ extern "C" {
         audio_backend_str: *const ::std::os::raw::c_char,
     ) -> *mut LiteRtLmEngineSettings;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_settings_delete(settings: *mut LiteRtLmEngineSettings);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_settings_set_max_num_tokens(
         settings: *mut LiteRtLmEngineSettings,
         max_num_tokens: ::std::os::raw::c_int,
     );
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_settings_set_parallel_file_section_loading(
         settings: *mut LiteRtLmEngineSettings,
         parallel_file_section_loading: bool,
     );
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_settings_set_cache_dir(
         settings: *mut LiteRtLmEngineSettings,
         cache_dir: *const ::std::os::raw::c_char,
     );
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_settings_set_activation_data_type(
         settings: *mut LiteRtLmEngineSettings,
         activation_data_type_int: ::std::os::raw::c_int,
     );
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_settings_set_prefill_chunk_size(
         settings: *mut LiteRtLmEngineSettings,
         prefill_chunk_size: ::std::os::raw::c_int,
     );
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_settings_enable_benchmark(settings: *mut LiteRtLmEngineSettings);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_settings_set_num_prefill_tokens(
         settings: *mut LiteRtLmEngineSettings,
         num_prefill_tokens: ::std::os::raw::c_int,
     );
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_settings_set_num_decode_tokens(
         settings: *mut LiteRtLmEngineSettings,
         num_decode_tokens: ::std::os::raw::c_int,
     );
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_create(settings: *const LiteRtLmEngineSettings) -> *mut LiteRtLmEngine;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_delete(engine: *mut LiteRtLmEngine);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_engine_create_session(
         engine: *mut LiteRtLmEngine,
         config: *mut LiteRtLmSessionConfig,
     ) -> *mut LiteRtLmSession;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_session_delete(session: *mut LiteRtLmSession);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_session_generate_content(
         session: *mut LiteRtLmSession,
         inputs: *const InputData,
         num_inputs: usize,
     ) -> *mut LiteRtLmResponses;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_responses_delete(responses: *mut LiteRtLmResponses);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_responses_get_num_candidates(
         responses: *const LiteRtLmResponses,
     ) -> ::std::os::raw::c_int;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_responses_get_response_text_at(
         responses: *const LiteRtLmResponses,
         index: ::std::os::raw::c_int,
     ) -> *const ::std::os::raw::c_char;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_session_get_benchmark_info(
         session: *mut LiteRtLmSession,
     ) -> *mut LiteRtLmBenchmarkInfo;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_benchmark_info_delete(benchmark_info: *mut LiteRtLmBenchmarkInfo);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_benchmark_info_get_time_to_first_token(
         benchmark_info: *const LiteRtLmBenchmarkInfo,
     ) -> f64;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_benchmark_info_get_total_init_time_in_second(
         benchmark_info: *const LiteRtLmBenchmarkInfo,
     ) -> f64;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_benchmark_info_get_num_prefill_turns(
         benchmark_info: *const LiteRtLmBenchmarkInfo,
     ) -> ::std::os::raw::c_int;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_benchmark_info_get_num_decode_turns(
         benchmark_info: *const LiteRtLmBenchmarkInfo,
     ) -> ::std::os::raw::c_int;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_benchmark_info_get_prefill_token_count_at(
         benchmark_info: *const LiteRtLmBenchmarkInfo,
         index: ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_int;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_benchmark_info_get_decode_token_count_at(
         benchmark_info: *const LiteRtLmBenchmarkInfo,
         index: ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_int;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_benchmark_info_get_prefill_tokens_per_sec_at(
         benchmark_info: *const LiteRtLmBenchmarkInfo,
         index: ::std::os::raw::c_int,
     ) -> f64;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_benchmark_info_get_decode_tokens_per_sec_at(
         benchmark_info: *const LiteRtLmBenchmarkInfo,
         index: ::std::os::raw::c_int,
@@ -277,7 +277,7 @@ pub type LiteRtLmStreamCallback = ::std::option::Option<
         error_msg: *const ::std::os::raw::c_char,
     ),
 >;
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_session_generate_content_stream(
         session: *mut LiteRtLmSession,
         inputs: *const InputData,
@@ -286,31 +286,31 @@ extern "C" {
         callback_data: *mut ::std::os::raw::c_void,
     ) -> ::std::os::raw::c_int;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_conversation_create(
         engine: *mut LiteRtLmEngine,
         config: *mut LiteRtLmConversationConfig,
     ) -> *mut LiteRtLmConversation;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_conversation_delete(conversation: *mut LiteRtLmConversation);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_conversation_send_message(
         conversation: *mut LiteRtLmConversation,
         message_json: *const ::std::os::raw::c_char,
         extra_context: *const ::std::os::raw::c_char,
     ) -> *mut LiteRtLmJsonResponse;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_json_response_delete(response: *mut LiteRtLmJsonResponse);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_json_response_get_string(
         response: *const LiteRtLmJsonResponse,
     ) -> *const ::std::os::raw::c_char;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_conversation_send_message_stream(
         conversation: *mut LiteRtLmConversation,
         message_json: *const ::std::os::raw::c_char,
@@ -319,10 +319,10 @@ extern "C" {
         callback_data: *mut ::std::os::raw::c_void,
     ) -> ::std::os::raw::c_int;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_conversation_cancel_process(conversation: *mut LiteRtLmConversation);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn litert_lm_conversation_get_benchmark_info(
         conversation: *mut LiteRtLmConversation,
     ) -> *mut LiteRtLmBenchmarkInfo;

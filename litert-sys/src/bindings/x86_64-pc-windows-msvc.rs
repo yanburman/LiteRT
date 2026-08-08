@@ -273,7 +273,7 @@ pub struct LiteRtApiVersion {
     pub minor: ::std::os::raw::c_int,
     pub patch: ::std::os::raw::c_int,
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompareApiVersion(
         version: LiteRtApiVersion,
         reference: LiteRtApiVersion,
@@ -311,7 +311,7 @@ pub const kLiteRtStatusErrorIncompatibleByteCodeVersion: LiteRtStatus = 4002;
 pub const kLiteRtStatusErrorUnsupportedOpShapeInferer: LiteRtStatus = 5000;
 pub const kLiteRtStatusErrorShapeInferenceFailed: LiteRtStatus = 5001;
 pub type LiteRtStatus = ::std::os::raw::c_int;
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetStatusString(status: LiteRtStatus) -> *const ::std::os::raw::c_char;
 }
 pub const kLiteRtHwAcceleratorNone: LiteRtHwAccelerators = 0;
@@ -444,13 +444,13 @@ impl LiteRtLayout {
         __bindgen_bitfield_unit
     }
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumLayoutElements(
         layout: *const LiteRtLayout,
         num_elements: *mut usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtIsSameLayout(
         layout1: *const LiteRtLayout,
         layout2: *const LiteRtLayout,
@@ -564,25 +564,25 @@ pub const kLiteRtQuantizationPerChannel: LiteRtQuantizationTypeId = 2;
 pub const kLiteRtQuantizationBlockWise: LiteRtQuantizationTypeId = 3;
 #[doc = "\n @note This concrete type is part of the public API and is ABI stable."]
 pub type LiteRtQuantizationTypeId = ::std::os::raw::c_int;
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetQuantizationTypeId(
         tensor: LiteRtTensor,
         q_type_id: *mut LiteRtQuantizationTypeId,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetPerTensorQuantization(
         tensor: LiteRtTensor,
         per_tensor_quantization: *mut LiteRtQuantizationPerTensor,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetPerChannelQuantization(
         tensor: LiteRtTensor,
         per_channel_quantization: *mut LiteRtQuantizationPerChannel,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetBlockWiseQuantization(
         tensor: LiteRtTensor,
         block_wise_quantization: *mut LiteRtQuantizationBlockWise,
@@ -806,30 +806,30 @@ impl Default for LiteRtMagicNumberVerifications {
         }
     }
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetEnvironmentOptionsValue(
         options: LiteRtEnvironmentOptions,
         tag: LiteRtEnvOptionTag,
         value: *mut LiteRtAny,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateEnvironment(
         num_options: ::std::os::raw::c_int,
         options: *const LiteRtEnvOption,
         environment: *mut LiteRtEnvironment,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDestroyEnvironment(environment: LiteRtEnvironment);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetEnvironmentOptions(
         environment: LiteRtEnvironment,
         options: *mut LiteRtEnvironmentOptions,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtAddEnvironmentOptions(
         environment: LiteRtEnvironment,
         num_options: ::std::os::raw::c_int,
@@ -837,44 +837,44 @@ extern "C" {
         overwrite: bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGpuEnvironmentCreate(
         environment: LiteRtEnvironment,
         num_options: ::std::os::raw::c_int,
         options: *const LiteRtEnvOption,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtEnvironmentSupportsClGlInterop(
         environment: LiteRtEnvironment,
         is_supported: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtEnvironmentSupportsAhwbClInterop(
         environment: LiteRtEnvironment,
         is_supported: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtEnvironmentSupportsAhwbGlInterop(
         environment: LiteRtEnvironment,
         is_supported: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtEnvironmentSupportsFP16(
         environment: LiteRtEnvironment,
         is_supported: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtEnvironmentHasGpuEnvironment(
         environment: LiteRtEnvironment,
         has_gpu_environment: *mut bool,
     );
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateOpaqueOptions(
         payload_identifier: *const ::std::os::raw::c_char,
         payload_data: *mut ::std::os::raw::c_void,
@@ -884,49 +884,49 @@ extern "C" {
         options: *mut LiteRtOpaqueOptions,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDestroyOpaqueOptions(options: LiteRtOpaqueOptions);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetOpaqueOptionsIdentifier(
         options: LiteRtOpaqueOptions,
         payload_identifier: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetOpaqueOptionsData(
         options: LiteRtOpaqueOptions,
         payload_data: *mut *mut ::std::os::raw::c_void,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtFindOpaqueOptionsData(
         options: LiteRtOpaqueOptions,
         payload_identifier: *const ::std::os::raw::c_char,
         payload_data: *mut *mut ::std::os::raw::c_void,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNextOpaqueOptions(options: *mut LiteRtOpaqueOptions) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtAppendOpaqueOptions(
         options: *mut LiteRtOpaqueOptions,
         appended_options: LiteRtOpaqueOptions,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtPopOpaqueOptions(options: *mut LiteRtOpaqueOptions) -> LiteRtStatus;
 }
 pub type LiteRtOpaqueOptionsHashFunc =
     ::std::option::Option<unsafe extern "C" fn(payload_data: *const ::std::os::raw::c_void) -> u64>;
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtSetOpaqueOptionsHash(
         options: LiteRtOpaqueOptions,
         payload_hash_func: LiteRtOpaqueOptionsHashFunc,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetOpaqueOptionsHash(options: LiteRtOpaqueOptions, hash: *mut u64)
         -> LiteRtStatus;
 }
@@ -962,37 +962,37 @@ pub struct LiteRtCustomOpKernel {
         unsafe extern "C" fn(user_data: *mut ::std::os::raw::c_void) -> LiteRtStatus,
     >,
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateOptions(options: *mut LiteRtOptions) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDestroyOptions(options: LiteRtOptions);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtSetOptionsHardwareAccelerators(
         options: LiteRtOptions,
         hardware_accelerators: LiteRtHwAcceleratorSet,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetOptionsHardwareAccelerators(
         options: LiteRtOptions,
         hardware_accelerators: *mut LiteRtHwAcceleratorSet,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtAddOpaqueOptions(
         options: LiteRtOptions,
         opaque_options: LiteRtOpaqueOptions,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetOpaqueOptions(
         options: LiteRtOptions,
         opaque_options: *mut LiteRtOpaqueOptions,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtAddCustomOpKernelOption(
         options: LiteRtOptions,
         custom_op_name: *const ::std::os::raw::c_char,
@@ -1001,7 +1001,7 @@ extern "C" {
         custom_op_kernel_user_data: *mut ::std::os::raw::c_void,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtAddExternalTensorBinding(
         options: LiteRtOptions,
         signature_name: *const ::std::os::raw::c_char,
@@ -1225,40 +1225,40 @@ pub struct LiteRtAllocationT {
 }
 pub type LiteRtAllocation = *mut LiteRtAllocationT;
 pub type LiteRtAllocationConst = *const LiteRtAllocationT;
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorName(
         tensor: LiteRtTensor,
         name: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorIndex(tensor: LiteRtTensor, tensor_index: *mut u32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorTypeId(
         tensor: LiteRtTensor,
         type_id: *mut LiteRtTensorTypeId,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetUnrankedTensorType(
         tensor: LiteRtTensor,
         unranked_tensor_type: *mut LiteRtUnrankedTensorType,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetRankedTensorType(
         tensor: LiteRtTensor,
         ranked_tensor_type: *mut LiteRtRankedTensorType,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumTensorUses(
         tensor: LiteRtTensor,
         num_uses: *mut LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorUse(
         tensor: LiteRtTensor,
         use_index: LiteRtParamIndex,
@@ -1266,184 +1266,184 @@ extern "C" {
         user_arg_index: *mut LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorDefiningOp(
         tensor: LiteRtTensor,
         has_defining_op: *mut bool,
         defining_op: *mut LiteRtTensorDefiningOp,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorWeights(
         tensor: LiteRtTensor,
         weights: *mut LiteRtWeights,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetWeightsBytes(
         weights: LiteRtWeights,
         addr: *mut *const ::std::os::raw::c_void,
         size: *mut usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetWeightsBufferId(weights: LiteRtWeights, buffer_id: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetOpCode(op: LiteRtOp, code: *mut LiteRtOpCode) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetCustomCode(
         op: LiteRtOp,
         code: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetCustomOptions(
         op: LiteRtOp,
         custom_options: *mut *const u8,
         size: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumOpInputs(op: LiteRtOp, num_inputs: *mut LiteRtParamIndex) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetOpInput(
         op: LiteRtOp,
         input_index: LiteRtParamIndex,
         input: *mut LiteRtTensor,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumOpOutputs(op: LiteRtOp, num_outputs: *mut LiteRtParamIndex) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetOpOutput(
         op: LiteRtOp,
         output_index: LiteRtParamIndex,
         output: *mut LiteRtTensor,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSubgraphName(
         subgraph: LiteRtSubgraph,
         name: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumSubgraphInputs(
         subgraph: LiteRtSubgraph,
         num_inputs: *mut LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSubgraphInput(
         subgraph: LiteRtSubgraph,
         input_index: LiteRtParamIndex,
         input: *mut LiteRtTensor,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumSubgraphOutputs(
         subgraph: LiteRtSubgraph,
         num_outputs: *mut LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSubgraphOutput(
         subgraph: LiteRtSubgraph,
         output_index: LiteRtParamIndex,
         output: *mut LiteRtTensor,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumSubgraphOps(
         subgraph: LiteRtSubgraph,
         num_ops: *mut LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSubgraphOp(
         subgraph: LiteRtSubgraph,
         op_index: LiteRtParamIndex,
         op: *mut LiteRtOp,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSignatureKey(
         signature: LiteRtSignature,
         signature_key: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSignatureSubgraph(
         signature: LiteRtSignature,
         subgraph: *mut LiteRtSubgraph,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumSignatureInputs(
         signature: LiteRtSignature,
         num_inputs: *mut LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSignatureInputName(
         signature: LiteRtSignature,
         input_idx: LiteRtParamIndex,
         input_name: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSignatureInputTensor(
         signature: LiteRtSignature,
         input_name: *const ::std::os::raw::c_char,
         tensor: *mut LiteRtTensor,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSignatureInputTensorByIndex(
         signature: LiteRtSignature,
         input_idx: LiteRtParamIndex,
         tensor: *mut LiteRtTensor,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumSignatureOutputs(
         signature: LiteRtSignature,
         num_outputs: *mut LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSignatureOutputName(
         signature: LiteRtSignature,
         output_idx: LiteRtParamIndex,
         output_name: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSignatureOutputTensor(
         signature: LiteRtSignature,
         output_name: *const ::std::os::raw::c_char,
         tensor: *mut LiteRtTensor,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSignatureOutputTensorByIndex(
         signature: LiteRtSignature,
         output_idx: LiteRtParamIndex,
         tensor: *mut LiteRtTensor,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateModelFromFile(
         environment: LiteRtEnvironment,
         filename: *const ::std::os::raw::c_char,
         model: *mut LiteRtModel,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateModelFromBuffer(
         environment: LiteRtEnvironment,
         buffer_addr: *const ::std::os::raw::c_void,
@@ -1451,7 +1451,7 @@ extern "C" {
         model: *mut LiteRtModel,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateModelFromFd(
         environment: LiteRtEnvironment,
         fd: ::std::os::raw::c_int,
@@ -1460,7 +1460,7 @@ extern "C" {
         model: *mut LiteRtModel,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetModelMetadata(
         model: LiteRtModel,
         metadata_key: *const ::std::os::raw::c_char,
@@ -1468,7 +1468,7 @@ extern "C" {
         metadata_buffer_size: *mut usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtAddModelMetadata(
         model: LiteRtModel,
         metadata_key: *const ::std::os::raw::c_char,
@@ -1476,49 +1476,49 @@ extern "C" {
         metadata_buffer_size: usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMainModelSubgraphIndex(
         model: LiteRtModel,
         main_subgraph_index: *mut LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumModelSubgraphs(
         model: LiteRtModel,
         num_subgraphs: *mut LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetModelSubgraph(
         model: LiteRtModel,
         subgraph_index: LiteRtParamIndex,
         subgraph: *mut LiteRtSubgraph,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumModelSignatures(
         model: LiteRtModel,
         num_signatures: *mut LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetModelSignature(
         model: LiteRtModel,
         signature_index: LiteRtParamIndex,
         signature: *mut LiteRtSignature,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDestroyModel(model: LiteRtModel);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtPushOp(
         op_list: LiteRtOpList,
         op: LiteRtOp,
         partition_index: LiteRtParamIndex,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtSerializeModelWithSignatures(
         model: LiteRtModel,
         buf: *mut *mut u8,
@@ -1530,7 +1530,7 @@ extern "C" {
         options: LiteRtModelSerializationOptions,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtSerializeModel(
         model: LiteRtModel,
         buf: *mut *mut u8,
@@ -1540,39 +1540,39 @@ extern "C" {
         options: LiteRtModelSerializationOptions,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateModelFromAllocation(
         environment: LiteRtEnvironment,
         allocation: LiteRtAllocation,
         model: *mut LiteRtModel,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetAddFusedActivationOption(
         op: LiteRtOp,
         fused_activation: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildAddOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         fused_activation: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetBatchMatmulAdjXOption(op: LiteRtOp, adj_x: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetBatchMatmulAdjYOption(op: LiteRtOp, adj_y: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetBatchMatmulAsymmetricQuantizeInputOption(
         op: LiteRtOp,
         asymmetric_quantize_input: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildBatchMatmulOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -1581,16 +1581,16 @@ extern "C" {
         asymmetric_quantize_input: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConcatenationFusedActivationOption(
         op: LiteRtOp,
         fused_activation: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConcatenationAxisOption(op: LiteRtOp, axis: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildConcatenationOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -1598,50 +1598,50 @@ extern "C" {
         axis: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetDivFusedActivationOption(
         op: LiteRtOp,
         fused_activation: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildDivOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         fused_activation: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetFullyConnectedFusedActivationOption(
         op: LiteRtOp,
         fused_activation: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetFullyConnectedWeightsFormatOption(
         op: LiteRtOp,
         weights_format: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetFullyConnectedKeepNumDimsOption(
         op: LiteRtOp,
         keep_num_dims: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtFullyConnectedGetQuantizedBiasTypeOption(
         op: LiteRtOp,
         quantized_bias_type: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetFullyConnectedAsymmetricQuantizeInputOption(
         op: LiteRtOp,
         asymmetric_quantize_input: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildFullyConnectedOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -1652,58 +1652,58 @@ extern "C" {
         asymmetric_quantize_input: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMulFusedActivationOption(
         op: LiteRtOp,
         fused_activation: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildMulOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         fused_activation: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSoftmaxBetaOption(op: LiteRtOp, beta: *mut f32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildSoftmaxOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         beta: *mut f32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetStridedSliceBeginMaskOption(op: LiteRtOp, begin_mask: *mut i32)
         -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetStridedSliceEndMaskOption(op: LiteRtOp, end_mask: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetStridedSliceEllipsisMaskOption(
         op: LiteRtOp,
         ellipsis_mask: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetStridedSliceNewAxisMaskOption(
         op: LiteRtOp,
         new_axis_mask: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetStridedSliceShrinkAxisMaskOption(
         op: LiteRtOp,
         shrink_axis_mask: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetStridedSliceOffsetOption(op: LiteRtOp, offset: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildStridedSliceOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -1715,27 +1715,27 @@ extern "C" {
         offset: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSubFusedActivationOption(
         op: LiteRtOp,
         fused_activation: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildSubOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         fused_activation: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetReshapeNewShapeOption(
         op: LiteRtOp,
         new_shape: *mut *const i32,
         new_shape_size: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildReshapeOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -1743,63 +1743,63 @@ extern "C" {
         new_shape_size: i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSumKeepDimsOption(op: LiteRtOp, keepdims: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildSumOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         keepdims: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetReduceMaxKeepDimsOption(op: LiteRtOp, keepdims: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildReduceMaxOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         keepdims: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetReduceMinKeepDimsOption(op: LiteRtOp, keepdims: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildReduceMinOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         keepdims: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetReduceAnyKeepDimsOption(op: LiteRtOp, keepdims: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildReduceAnyOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         keepdims: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetReduceAllKeepDimsOption(op: LiteRtOp, keepdims: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildReduceAllOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         keepdims: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetPackAxisOption(op: LiteRtOp, axis: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetPackValuesCountOption(op: LiteRtOp, values_count: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildPackOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -1807,16 +1807,16 @@ extern "C" {
         values_count: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetOneHotAxisOption(op: LiteRtOp, axis: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetUnpackAxisOption(op: LiteRtOp, axis: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetUnpackNumOption(op: LiteRtOp, num: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildUnpackOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -1824,13 +1824,13 @@ extern "C" {
         num: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetGatherAxisOption(op: LiteRtOp, axis: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetGatherBatchDimsOption(op: LiteRtOp, batch_dims: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildGatherOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -1838,79 +1838,79 @@ extern "C" {
         batch_dims: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMeanKeepDimsOption(op: LiteRtOp, keepdims: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildMeanOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         keepdims: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSplitNumSplitsOption(op: LiteRtOp, num_splits: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildSplitOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         num_splits: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSplitVNumSplitsOption(op: LiteRtOp, num_splits: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSHLOCompositeOpName(
         op: LiteRtOp,
         name: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSHLOCompositeOpDecompositionSubgraphIndex(
         op: LiteRtOp,
         decomposition_subgraph_index: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSHLOCompositeOpAttributes(
         op: LiteRtOp,
         attributes: *mut *const u8,
         attributes_size: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSHLOCompositeOpVersion(op: LiteRtOp, version: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv2dPaddingOption(op: LiteRtOp, padding: *mut u32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv2dStrideWOption(op: LiteRtOp, stride_w: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv2dStrideHOption(op: LiteRtOp, stride_h: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv2dFusedActivationOption(
         op: LiteRtOp,
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv2dDilationWOption(
         op: LiteRtOp,
         dilation_w_factor: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv2dDilationHOption(
         op: LiteRtOp,
         dilation_h_factor: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildConv2dOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -1922,43 +1922,43 @@ extern "C" {
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv3dPaddingOption(op: LiteRtOp, padding: *mut u32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv3dStrideDOption(op: LiteRtOp, stride_d: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv3dStrideWOption(op: LiteRtOp, stride_w: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv3dStrideHOption(op: LiteRtOp, stride_h: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv3dFusedActivationOption(
         op: LiteRtOp,
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv3dDilationDOption(
         op: LiteRtOp,
         dilation_d_factor: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv3dDilationWOption(
         op: LiteRtOp,
         dilation_w_factor: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetConv3dDilationHOption(
         op: LiteRtOp,
         dilation_h_factor: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildConv3dOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -1972,40 +1972,40 @@ extern "C" {
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetDepthwiseConv2dPaddingOption(op: LiteRtOp, padding: *mut u32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetDepthwiseConv2dStrideWOption(op: LiteRtOp, stride_w: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetDepthwiseConv2dStrideHOption(op: LiteRtOp, stride_h: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetDepthwiseConv2dDepthMultiplierOption(
         op: LiteRtOp,
         depth_multiplier: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetDepthwiseConv2dFusedActivationOption(
         op: LiteRtOp,
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetDepthwiseConv2dDilationWOption(
         op: LiteRtOp,
         dilation_w_factor: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetDepthwiseConv2dDilationHOption(
         op: LiteRtOp,
         dilation_h_factor: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildDepthwiseConv2dOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -2018,22 +2018,22 @@ extern "C" {
         dilation_h_factor: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTransposeConvPaddingOption(op: LiteRtOp, padding: *mut u32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTransposeConvStrideWOption(op: LiteRtOp, stride_w: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTransposeConvStrideHOption(op: LiteRtOp, stride_h: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTransposeConvFusedActivationOption(
         op: LiteRtOp,
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildTransposeConvOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -2043,34 +2043,34 @@ extern "C" {
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetAveragePool2dPaddingOption(op: LiteRtOp, padding: *mut u32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetAveragePool2dStrideWOption(op: LiteRtOp, stride_w: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetAveragePool2dStrideHOption(op: LiteRtOp, stride_h: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetAveragePool2dFilterWidthOption(
         op: LiteRtOp,
         filter_width: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetAveragePool2dFilterHeightOption(
         op: LiteRtOp,
         filter_height: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetAveragePool2dFusedActivationOption(
         op: LiteRtOp,
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildAveragePool2dOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -2082,34 +2082,34 @@ extern "C" {
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMaxPool2dPaddingOption(op: LiteRtOp, padding: *mut u32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMaxPool2dStrideWOption(op: LiteRtOp, stride_w: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMaxPool2dStrideHOption(op: LiteRtOp, stride_h: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMaxPool2dFilterWidthOption(
         op: LiteRtOp,
         filter_width: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMaxPool2dFilterHeightOption(
         op: LiteRtOp,
         filter_height: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMaxPool2dFusedActivationOption(
         op: LiteRtOp,
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildMaxPool2dOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -2121,32 +2121,32 @@ extern "C" {
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetL2Pool2dPaddingOption(op: LiteRtOp, padding: *mut u32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetL2Pool2dStrideWOption(op: LiteRtOp, stride_w: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetL2Pool2dStrideHOption(op: LiteRtOp, stride_h: *mut i32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetL2Pool2dFilterWidthOption(op: LiteRtOp, filter_width: *mut i32)
         -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetL2Pool2dFilterHeightOption(
         op: LiteRtOp,
         filter_height: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetL2Pool2dFusedActivationOption(
         op: LiteRtOp,
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildL2Pool2dOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -2158,19 +2158,19 @@ extern "C" {
         fused_activation_function: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetResizeBilinearAlignCornersOption(
         op: LiteRtOp,
         align_corners: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetResizeBilinearHalfPixelCenterOption(
         op: LiteRtOp,
         half_pixel_centers: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildResizeBilinearOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -2178,51 +2178,51 @@ extern "C" {
         half_pixel_centers: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetLeakyReluAlphaOption(op: LiteRtOp, alpha: *mut f32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildLeakyReluOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         alpha: *mut f32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetDepthToSpaceBlockSizeOption(op: LiteRtOp, block_size: *mut i32)
         -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildDepthToSpaceOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         block_size: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSpaceToDepthBlockSizeOption(op: LiteRtOp, block_size: *mut i32)
         -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildSpaceToDepthOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         block_size: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetResizeNearestNeighborAlignCornersOption(
         op: LiteRtOp,
         align_corners: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetResizeNearestNeighborHalfPixelCenterOption(
         op: LiteRtOp,
         half_pixel_centers: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildResizeNearestNeighborOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -2230,13 +2230,13 @@ extern "C" {
         half_pixel_centers: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetCumsumExclusiveOption(op: LiteRtOp, exclusive: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetCumsumReverseOption(op: LiteRtOp, reverse: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildCumsumOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -2244,34 +2244,34 @@ extern "C" {
         reverse: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetGeluApproximateOption(op: LiteRtOp, approximate: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildGeluOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         approximate: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMirrorPadModeOption(op: LiteRtOp, mode: *mut u32) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildMirrorPadOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
         mode: *mut u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSqueezeDimsOption(
         op: LiteRtOp,
         squeeze_dims: *mut *const i32,
         num_squeeze_dims: *mut i32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtBuilderBuildSqueezeOpOption(
         builder: LiteRtBuilder,
         op: LiteRtOp,
@@ -2321,7 +2321,7 @@ pub struct WGPUBufferImpl {
 }
 pub type LiteRtWGPUBufferImpl = WGPUBufferImpl;
 pub type LiteRtWGPUBuffer = *mut LiteRtWGPUBufferImpl;
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferRequirements(
         num_supported_tensor_buffer_types: ::std::os::raw::c_int,
         supported_tensor_buffer_types: *const LiteRtTensorBufferType,
@@ -2331,7 +2331,7 @@ extern "C" {
         requirements: *mut LiteRtTensorBufferRequirements,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferRequirementsWithAlignment(
         num_supported_tensor_buffer_types: ::std::os::raw::c_int,
         supported_tensor_buffer_types: *const LiteRtTensorBufferType,
@@ -2342,49 +2342,49 @@ extern "C" {
         requirements: *mut LiteRtTensorBufferRequirements,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumTensorBufferRequirementsSupportedBufferTypes(
         requirements: LiteRtTensorBufferRequirements,
         num_types: *mut ::std::os::raw::c_int,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferRequirementsSupportedTensorBufferType(
         requirements: LiteRtTensorBufferRequirements,
         type_index: ::std::os::raw::c_int,
         type_: *mut LiteRtTensorBufferType,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferRequirementsBufferSize(
         requirements: LiteRtTensorBufferRequirements,
         buffer_size: *mut usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferRequirementsStrides(
         requirements: LiteRtTensorBufferRequirements,
         num_strides: *mut ::std::os::raw::c_int,
         strides: *mut *const u32,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferRequirementsAlignment(
         requirements: LiteRtTensorBufferRequirements,
         alignment: *mut usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtJoinTensorBufferRequirements(
         src_requirements_1: LiteRtTensorBufferRequirements,
         src_requirements_2: LiteRtTensorBufferRequirements,
         joined_requirements: *mut LiteRtTensorBufferRequirements,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDestroyTensorBufferRequirements(requirements: LiteRtTensorBufferRequirements);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromHostMemory(
         tensor_type: *const LiteRtRankedTensorType,
         host_buffer_addr: *mut ::std::os::raw::c_void,
@@ -2393,13 +2393,13 @@ extern "C" {
         buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferHostMemory(
         tensor_buffer: LiteRtTensorBuffer,
         host_memory_addr: *mut *mut ::std::os::raw::c_void,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromAhwb(
         env: LiteRtEnvironment,
         tensor_type: *const LiteRtRankedTensorType,
@@ -2409,13 +2409,13 @@ extern "C" {
         buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferAhwb(
         tensor_buffer: LiteRtTensorBuffer,
         ahwb: *mut *mut AHardwareBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromIonBuffer(
         tensor_type: *const LiteRtRankedTensorType,
         ion_buffer_addr: *mut ::std::os::raw::c_void,
@@ -2426,14 +2426,14 @@ extern "C" {
         buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferIonBuffer(
         buffer: LiteRtTensorBuffer,
         ion_buffer_addr: *mut *mut ::std::os::raw::c_void,
         ion_buffer_fd: *mut ::std::os::raw::c_int,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromDmaBufBuffer(
         tensor_type: *const LiteRtRankedTensorType,
         dmabuf_buffer_addr: *mut ::std::os::raw::c_void,
@@ -2444,14 +2444,14 @@ extern "C" {
         buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferDmaBufBuffer(
         tensor_buffer: LiteRtTensorBuffer,
         dmabuf_buffer_addr: *mut *mut ::std::os::raw::c_void,
         dmabuf_buffer_fd: *mut ::std::os::raw::c_int,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromFastRpcBuffer(
         tensor_type: *const LiteRtRankedTensorType,
         fastrpc_buffer_addr: *mut ::std::os::raw::c_void,
@@ -2462,14 +2462,14 @@ extern "C" {
         tensor_buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferFastRpcBuffer(
         tensor_buffer: LiteRtTensorBuffer,
         fastrpc_buffer_addr: *mut *mut ::std::os::raw::c_void,
         fastrpc_buffer_fd: *mut ::std::os::raw::c_int,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromOpenClMemory(
         env: LiteRtEnvironment,
         tensor_type: *const LiteRtRankedTensorType,
@@ -2480,19 +2480,19 @@ extern "C" {
         buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferOpenClMemory(
         tensor_buffer: LiteRtTensorBuffer,
         cl_mem_addr: *mut LiteRtClMem,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferCustomTensorBufferHandle(
         tensor_buffer: LiteRtTensorBuffer,
         hw_memory_handle: *mut HwMemoryHandle,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromGlBuffer(
         env: LiteRtEnvironment,
         tensor_type: *const LiteRtRankedTensorType,
@@ -2504,7 +2504,7 @@ extern "C" {
         buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferGlBuffer(
         tensor_buffer: LiteRtTensorBuffer,
         target: *mut LiteRtGLenum,
@@ -2513,7 +2513,7 @@ extern "C" {
         offset: *mut usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromGlTexture(
         env: LiteRtEnvironment,
         tensor_type: *const LiteRtRankedTensorType,
@@ -2526,7 +2526,7 @@ extern "C" {
         buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferGlTexture(
         tensor_buffer: LiteRtTensorBuffer,
         target: *mut LiteRtGLenum,
@@ -2536,7 +2536,7 @@ extern "C" {
         layer: *mut LiteRtGLint,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromWebGpuBuffer(
         env: LiteRtEnvironment,
         tensor_type: *const LiteRtRankedTensorType,
@@ -2547,7 +2547,7 @@ extern "C" {
         tensor_buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromWebGpuTexture(
         env: LiteRtEnvironment,
         tensor_type: *const LiteRtRankedTensorType,
@@ -2557,13 +2557,13 @@ extern "C" {
         tensor_buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferWebGpuBuffer(
         tensor_buffer: LiteRtTensorBuffer,
         hw_memory_handle: *mut HwMemoryHandle,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateTensorBufferFromMetalMemory(
         env: LiteRtEnvironment,
         tensor_type: *const LiteRtRankedTensorType,
@@ -2574,19 +2574,19 @@ extern "C" {
         tensor_buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferMetalMemory(
         tensor_buffer: LiteRtTensorBuffer,
         hw_memory_handle: *mut HwMemoryHandle,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferVulkanMemory(
         tensor_buffer: LiteRtTensorBuffer,
         hw_memory_handle: *mut HwMemoryHandle,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateManagedTensorBuffer(
         env: LiteRtEnvironment,
         buffer_type: LiteRtTensorBufferType,
@@ -2595,7 +2595,7 @@ extern "C" {
         buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateManagedTensorBufferFromRequirements(
         env: LiteRtEnvironment,
         tensor_type: *const LiteRtRankedTensorType,
@@ -2603,74 +2603,74 @@ extern "C" {
         buffer: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDuplicateTensorBuffer(tensor_buffer: LiteRtTensorBuffer) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferType(
         tensor_buffer: LiteRtTensorBuffer,
         buffer_type: *mut LiteRtTensorBufferType,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferTensorType(
         tensor_buffer: LiteRtTensorBuffer,
         tensor_type: *mut LiteRtRankedTensorType,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferSize(
         tensor_buffer: LiteRtTensorBuffer,
         size: *mut usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferPackedSize(
         tensor_buffer: LiteRtTensorBuffer,
         size: *mut usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferOffset(
         tensor_buffer: LiteRtTensorBuffer,
         offset: *mut usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtHasTensorBufferEvent(
         tensor_buffer: LiteRtTensorBuffer,
         has_event: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetTensorBufferEvent(
         tensor_buffer: LiteRtTensorBuffer,
         event: *mut LiteRtEvent,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtSetTensorBufferEvent(
         tensor_buffer: LiteRtTensorBuffer,
         event: LiteRtEvent,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtClearTensorBufferEvent(tensor_buffer: LiteRtTensorBuffer) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtLockTensorBuffer(
         tensor_buffer: LiteRtTensorBuffer,
         host_mem_addr: *mut *mut ::std::os::raw::c_void,
         lock_mode: LiteRtTensorBufferLockMode,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtUnlockTensorBuffer(buffer: LiteRtTensorBuffer) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtClearTensorBuffer(buffer: LiteRtTensorBuffer) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDestroyTensorBuffer(buffer: LiteRtTensorBuffer);
 }
 pub const LiteRtEventTypeUnknown: LiteRtEventType = 0;
@@ -2686,7 +2686,7 @@ pub type LiteRtCustomEvent = *mut LiteRtCustomEventT;
 pub struct LiteRtCustomEventT {
     pub _address: u8,
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateEventFromSyncFenceFd(
         env: LiteRtEnvironment,
         sync_fence_fd: ::std::os::raw::c_int,
@@ -2694,81 +2694,81 @@ extern "C" {
         event: *mut LiteRtEvent,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateEventFromOpenClEvent(
         env: LiteRtEnvironment,
         cl_event: LiteRtClEvent,
         event: *mut LiteRtEvent,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateEventFromEglSyncFence(
         env: LiteRtEnvironment,
         egl_sync: LiteRtEglSyncKhr,
         event: *mut LiteRtEvent,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateManagedEvent(
         env: LiteRtEnvironment,
         type_: LiteRtEventType,
         event: *mut LiteRtEvent,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtSetCustomEvent(
         event: LiteRtEvent,
         custom_event: LiteRtCustomEvent,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetCustomEvent(
         event: LiteRtEvent,
         custom_event: *mut LiteRtCustomEvent,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetEventCustomNativeEvent(
         event: LiteRtEvent,
         native: *mut *mut ::std::os::raw::c_void,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetEventEventType(event: LiteRtEvent, type_: *mut LiteRtEventType)
         -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetEventSyncFenceFd(
         event: LiteRtEvent,
         sync_fence_fd: *mut ::std::os::raw::c_int,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetEventOpenClEvent(
         event: LiteRtEvent,
         cl_event: *mut LiteRtClEvent,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetEventEglSync(
         event: LiteRtEvent,
         egl_sync: *mut LiteRtEglSyncKhr,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtWaitEvent(event: LiteRtEvent, timeout_in_ms: i64) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtSignalEvent(event: LiteRtEvent) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtIsEventSignaled(event: LiteRtEvent, is_signaled: *mut bool) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDupFdEvent(event: LiteRtEvent, dup_fd: *mut ::std::os::raw::c_int)
         -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDestroyEvent(event: LiteRtEvent);
 }
 pub const kLiteRtSchedulingInfoFieldOriginalUid: LiteRtSchedulingInfoField = 1;
@@ -2799,7 +2799,7 @@ impl Default for LiteRtSchedulingInfo {
         }
     }
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateCompiledModel(
         environment: LiteRtEnvironment,
         model: LiteRtModel,
@@ -2807,7 +2807,7 @@ extern "C" {
         compiled_model: *mut LiteRtCompiledModel,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetCompiledModelInputBufferRequirements(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2815,7 +2815,7 @@ extern "C" {
         buffer_requirements: *mut LiteRtTensorBufferRequirements,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetCompiledModelOutputBufferRequirements(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2823,7 +2823,7 @@ extern "C" {
         buffer_requirements: *mut LiteRtTensorBufferRequirements,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetCompiledModelInputTensorLayout(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2831,7 +2831,7 @@ extern "C" {
         layout: *mut LiteRtLayout,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetCompiledModelOutputTensorLayouts(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2840,7 +2840,7 @@ extern "C" {
         update_allocation: bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtRunCompiledModel(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2850,7 +2850,7 @@ extern "C" {
         output_buffers: *mut LiteRtTensorBuffer,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtRunCompiledModelWithOptions(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2861,7 +2861,7 @@ extern "C" {
         options: LiteRtOptions,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtRunCompiledModelAsync(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2872,7 +2872,7 @@ extern "C" {
         async_: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtRunCompiledModelAsyncWithOptions(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2884,13 +2884,13 @@ extern "C" {
         options: LiteRtOptions,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelSetSchedulingInfo(
         compiled_model: LiteRtCompiledModel,
         scheduling_info: *const LiteRtSchedulingInfo,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtRunCompiledModelWithSchedulingInfo(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2901,7 +2901,7 @@ extern "C" {
         scheduling_info: *const LiteRtSchedulingInfo,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtRunCompiledModelAsyncWithSchedulingInfo(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2913,7 +2913,7 @@ extern "C" {
         scheduling_info: *const LiteRtSchedulingInfo,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtSetCompiledModelCancellationFunction(
         compiled_model: LiteRtCompiledModel,
         data: *mut ::std::os::raw::c_void,
@@ -2922,34 +2922,34 @@ extern "C" {
         >,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDestroyCompiledModel(compiled_model: LiteRtCompiledModel);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelStartMetricsCollection(
         compiled_model: LiteRtCompiledModel,
         detail_level: ::std::os::raw::c_int,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelStopMetricsCollection(
         compiled_model: LiteRtCompiledModel,
         metrics: LiteRtMetrics,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelIsFullyAccelerated(
         compiled_model: LiteRtCompiledModel,
         fully_accelerated: *mut bool,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelGetProfiler(
         compiled_model: LiteRtCompiledModel,
         profiler: *mut LiteRtProfiler,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelResizeInputTensor(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2958,7 +2958,7 @@ extern "C" {
         dims_size: usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelResizeInputTensorNonStrict(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2967,7 +2967,7 @@ extern "C" {
         dims_size: usize,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelSetDispatchAnnotation(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2975,7 +2975,7 @@ extern "C" {
         value: *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelGetDispatchAnnotation(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -2983,24 +2983,24 @@ extern "C" {
         value: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelRemoveDispatchAnnotation(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
         key: *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelReportError(
         compiled_model: LiteRtCompiledModel,
         format: *const ::std::os::raw::c_char,
         ...
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelClearErrors(compiled_model: LiteRtCompiledModel) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCompiledModelGetErrorMessages(
         compiled_model: LiteRtCompiledModel,
         error_messages: *mut *mut ::std::os::raw::c_char,
@@ -3047,23 +3047,23 @@ impl Default for LiteRtMetric {
         }
     }
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateMetrics(metrics: *mut LiteRtMetrics) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetNumMetrics(
         metrics: LiteRtMetrics,
         num_metrics: *mut ::std::os::raw::c_int,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMetric(
         metrics: LiteRtMetrics,
         metric_index: ::std::os::raw::c_int,
         metric: *mut LiteRtMetric,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDestroyMetrics(metrics: LiteRtMetrics);
 }
 pub type LiteRtLogSeverity = i8;
@@ -3074,25 +3074,25 @@ pub const kLiteRtLogSeverityWarning: _bindgen_ty_2 = 2;
 pub const kLiteRtLogSeverityError: _bindgen_ty_2 = 3;
 pub const kLiteRtLogSeveritySilent: _bindgen_ty_2 = 4;
 pub type _bindgen_ty_2 = ::std::os::raw::c_int;
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetLogSeverityName(severity: LiteRtLogSeverity) -> *const ::std::os::raw::c_char;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateLogger(logger: *mut LiteRtLogger) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetMinLoggerSeverity(
         logger: LiteRtLogger,
         min_severity: *mut LiteRtLogSeverity,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtSetMinLoggerSeverity(
         logger: LiteRtLogger,
         min_severity: LiteRtLogSeverity,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtLoggerLog(
         logger: LiteRtLogger,
         severity: LiteRtLogSeverity,
@@ -3100,47 +3100,47 @@ extern "C" {
         ...
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetLoggerIdentifier(
         logger: LiteRtLoggerConst,
         identifier: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDestroyLogger(logger: LiteRtLogger);
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtCreateSinkLogger(logger: *mut LiteRtLogger) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSinkLoggerSize(logger: LiteRtLogger, size: *mut usize) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetSinkLoggerMessage(
         logger: LiteRtLogger,
         idx: usize,
         message: *mut *const ::std::os::raw::c_char,
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtClearSinkLogger(logger: LiteRtLogger) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtGetDefaultLogger() -> LiteRtLogger;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtSetDefaultLogger(logger: LiteRtLogger) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtDefaultLoggerLog(
         severity: LiteRtLogSeverity,
         format: *const ::std::os::raw::c_char,
         ...
     ) -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtUseStandardLogger() -> LiteRtStatus;
 }
-extern "C" {
+unsafe extern "C" {
     pub fn LiteRtUseSinkLogger() -> LiteRtStatus;
 }

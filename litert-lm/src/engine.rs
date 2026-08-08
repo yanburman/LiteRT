@@ -150,7 +150,12 @@ impl Engine {
         unsafe { sys::litert_lm_set_min_log_level(3) }; // 3 = ERROR only
                                                         // 2. TFLite C++ runtime (WebGPU delegate's I0000/W0000 lines)
                                                         //    Respects TF_CPP_MIN_LOG_LEVEL env var: 0=INFO, 1=WARN, 2=ERROR, 3=FATAL
-        std::env::set_var("TF_CPP_MIN_LOG_LEVEL", "2");
+        // SAFETY: `set_var` is only sound while no other thread is concurrently
+        // reading or writing the environment. Engine construction is the
+        // caller's entry point into this crate and nothing here has spawned a
+        // thread yet; callers that mutate the environment from other threads
+        // must serialize that themselves, as they already must for `set_var`.
+        unsafe { std::env::set_var("TF_CPP_MIN_LOG_LEVEL", "2") };
         // 3. LiteRT C logger (accelerator registry INFO lines) — handled
         //    via litert_sys's libloading-based set_global_log_severity if
         //    the symbols are available on this platform.
