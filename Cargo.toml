@@ -11,7 +11,7 @@ members = [
 [workspace.package]
 version       = "0.3.0"
 edition       = "2024"
-rust-version  = "1.85"
+rust-version  = "1.88"
 license       = "Apache-2.0"
 repository    = "https://github.com/offbit-ai/LiteRT"
 homepage      = "https://github.com/offbit-ai/LiteRT"
@@ -27,20 +27,20 @@ litert        = { version = "0.3.0", path = "litert" }
 litert-lm-sys = { version = "0.3.0", path = "litert-lm-sys" }
 litertlm      = { version = "0.3.0", path = "litert-lm" }
 
-thiserror   = "1"
-libloading  = "0.8"
+thiserror   = "2.0.20"
+libloading  = "0.9"
 
 # Build-time deps shared by -sys crates. ureq uses pure-Rust rustls so the
 # build doesn't need libssl-dev (important for cross containers).
 ureq       = { version = "2", default-features = false, features = ["tls"] }
-sha2       = "0.10"
-zip        = "0.6"
+sha2       = "0.11"
+zip        = { version = "8", default-features = false, features = ["deflate"] }
 tar        = "0.4"
 flate2     = "1"
-dirs       = "5"
+dirs       = "6"
 bindgen    = "0.69"
-serde      = { version = "1", features = ["derive"] }
-serde_json = "1"
+serde      = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
 
 [profile.release]
 opt-level     = 3
