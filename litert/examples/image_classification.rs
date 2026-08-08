@@ -15,8 +15,8 @@
 use std::{error::Error, fs, io::Read, path::PathBuf};
 
 use litert::{
-    set_global_log_severity, CompilationOptions, CompiledModel, ElementType, Environment,
-    LogSeverity, Model, TensorBuffer,
+    CompilationOptions, CompiledModel, ElementType, Environment, LogSeverity, Model, TensorBuffer,
+    set_global_log_severity,
 };
 
 const ARCHIVE_URL: &str = "https://storage.googleapis.com/download.tensorflow.org/\

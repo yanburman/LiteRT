@@ -4,7 +4,7 @@ use std::ptr::NonNull;
 
 use litert_sys as sys;
 
-use crate::{check, Result};
+use crate::{Result, check};
 
 /// Holds the hardware context (device handles, caches, delegates).
 ///

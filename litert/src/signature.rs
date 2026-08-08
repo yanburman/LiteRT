@@ -4,7 +4,7 @@ use std::ptr::NonNull;
 
 use litert_sys as sys;
 
-use crate::{check, Error, Model, Result, TensorShape};
+use crate::{Error, Model, Result, TensorShape, check};
 
 /// A named entry point of a [`Model`]. Most models define a single default
 /// signature, exposed as index `0`.

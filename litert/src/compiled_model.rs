@@ -4,7 +4,7 @@ use std::ptr::NonNull;
 
 use litert_sys as sys;
 
-use crate::{check, CompilationOptions, Environment, Error, Model, Result, TensorBuffer};
+use crate::{CompilationOptions, Environment, Error, Model, Result, TensorBuffer, check};
 
 /// Index used to pick a signature (named entry point) when a model defines
 /// multiple graphs. The default signature, present in every LiteRT model, is

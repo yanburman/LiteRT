@@ -4,7 +4,7 @@ use std::{ffi::CString, path::Path, ptr::NonNull, sync::Arc};
 
 use litert_sys as sys;
 
-use crate::{check, Environment, Error, Result};
+use crate::{Environment, Error, Result, check};
 
 /// An immutable, reference-counted handle to a parsed LiteRT model.
 ///

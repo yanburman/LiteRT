@@ -11,8 +11,8 @@
 use std::path::PathBuf;
 
 use litert::{
-    set_global_log_severity, Accelerators, CompilationOptions, CompiledModel, ElementType,
-    Environment, LogSeverity, Model, TensorBuffer,
+    Accelerators, CompilationOptions, CompiledModel, ElementType, Environment, LogSeverity, Model,
+    TensorBuffer, set_global_log_severity,
 };
 
 fn fixture_path() -> PathBuf {

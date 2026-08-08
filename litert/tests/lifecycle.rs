@@ -5,8 +5,8 @@
 //! errors round-trip with useful messages.
 
 use litert::{
-    set_global_log_severity, Accelerators, CompilationOptions, ElementType, Environment, Error,
-    LogSeverity, Model, TensorBuffer, TensorShape,
+    Accelerators, CompilationOptions, ElementType, Environment, Error, LogSeverity, Model,
+    TensorBuffer, TensorShape, set_global_log_severity,
 };
 
 fn quiet_logs() {

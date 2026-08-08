@@ -9,7 +9,7 @@ use std::{
 
 use litert_sys as sys;
 
-use crate::{check, ElementType, Environment, Error, Result, TensorElement};
+use crate::{ElementType, Environment, Error, Result, TensorElement, check};
 
 /// Shape + element type of a ranked tensor.
 #[derive(Debug, Clone)]

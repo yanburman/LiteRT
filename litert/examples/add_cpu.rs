@@ -10,8 +10,8 @@
 use std::{error::Error, path::PathBuf};
 
 use litert::{
-    set_global_log_severity, CompilationOptions, CompiledModel, Environment, LogSeverity, Model,
-    TensorBuffer,
+    CompilationOptions, CompiledModel, Environment, LogSeverity, Model, TensorBuffer,
+    set_global_log_severity,
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
