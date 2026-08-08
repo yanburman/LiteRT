@@ -6,7 +6,7 @@ use std::ptr::NonNull;
 
 use litert_sys as sys;
 
-use crate::{check, Result};
+use crate::{Result, check};
 
 /// Hardware accelerator selection, represented as a bitset so a model can be
 /// compiled to target multiple backends simultaneously.
@@ -362,9 +362,9 @@ impl GpuOptions {
     ///
     /// Worth setting explicitly to `true` by any caller that attaches GPU
     /// options at all: the OpenCL/Vulkan/WebGPU delegates default this to
-    /// `true` internally, but `LrtGetGpuAcceleratorCompilationOptions-
-    /// MadviseOriginalSharedTensors` falls back to `false` when the field is
-    /// unset, and `ml_drift_delegate_create.cc` applies that fallback over the
+    /// `true` internally, but the corresponding getter in
+    /// `litert_gpu_options.cc` falls back to `false` when the field is unset,
+    /// and `ml_drift_delegate_create.cc` applies that fallback over the
     /// delegate's own default whenever a payload is present. So attaching a
     /// payload for any *other* reason silently disables madvise unless this is
     /// set. (Only observable on the paths that upload shared/streamed
