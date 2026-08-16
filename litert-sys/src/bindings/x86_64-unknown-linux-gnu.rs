@@ -352,6 +352,7 @@ pub type LiteRtHwAccelerators = ::std::os::raw::c_int;
 pub const kLiteRtDelegatePrecisionDefault: LiteRtDelegatePrecision = 0;
 pub const kLiteRtDelegatePrecisionFp16: LiteRtDelegatePrecision = 1;
 pub const kLiteRtDelegatePrecisionFp32: LiteRtDelegatePrecision = 2;
+pub const kLiteRtDelegatePrecisionFp16WithFp32Accum: LiteRtDelegatePrecision = 3;
 pub type LiteRtDelegatePrecision = ::std::os::raw::c_uint;
 pub const kLiteRtGpuPriorityDefault: LiteRtGpuPriority = 0;
 pub const kLiteRtGpuPriorityLow: LiteRtGpuPriority = 1;
@@ -445,20 +446,20 @@ impl LiteRtLayout {
         }
     }
     #[inline]
-    pub fn has_strides(&self) -> bool {
-        unsafe { ::std::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8) }
+    pub fn has_strides(&self) -> ::std::os::raw::c_uint {
+        unsafe { ::std::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u32) }
     }
     #[inline]
-    pub fn set_has_strides(&mut self, val: bool) {
+    pub fn set_has_strides(&mut self, val: ::std::os::raw::c_uint) {
         unsafe {
-            let val: u8 = ::std::mem::transmute(val);
+            let val: u32 = ::std::mem::transmute(val);
             self._bitfield_1.set(7usize, 1u8, val as u64)
         }
     }
     #[inline]
     pub fn new_bitfield_1(
         rank: ::std::os::raw::c_uint,
-        has_strides: bool,
+        has_strides: ::std::os::raw::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
         let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
         __bindgen_bitfield_unit.set(0usize, 7u8, {
@@ -466,7 +467,7 @@ impl LiteRtLayout {
             rank as u64
         });
         __bindgen_bitfield_unit.set(7usize, 1u8, {
-            let has_strides: u8 = unsafe { ::std::mem::transmute(has_strides) };
+            let has_strides: u32 = unsafe { ::std::mem::transmute(has_strides) };
             has_strides as u64
         });
         __bindgen_bitfield_unit
@@ -753,7 +754,11 @@ pub const kLiteRtEnvOptionTagMinLoggerSeverity: LiteRtEnvOptionTag = 25;
 pub const kLiteRtEnvOptionTagCompilerCacheMaxConfigsPerModel: LiteRtEnvOptionTag = 26;
 #[doc = " \\internal This is for internal use only, for a custom runtime."]
 pub const kLiteRtEnvOptionTagCompilerCacheMaxTotalSize: LiteRtEnvOptionTag = 27;
-#[doc = " \\internal This is for internal use only, for a custom runtime."]
+#[doc = " \\internal This is for internal use only. Reserved for use by LiteRT in\n Play services."]
+pub const kLiteRtEnvOptionTagContext: LiteRtEnvOptionTag = 28;
+#[doc = " \\internal This is for internal use only. Reserved for use by LiteRT in\n Play services."]
+pub const kLiteRtEnvOptionTagWebGpuFlushCallback: LiteRtEnvOptionTag = 29;
+#[doc = " \\internal This is for internal use only. Reserved for use by LiteRT in\n Play services."]
 pub const kLiteRtEnvOptionTagNull: LiteRtEnvOptionTag = 255;
 pub type LiteRtEnvOptionTag = ::std::os::raw::c_uint;
 #[doc = " An object that holds option data for the LiteRtEnvironment.\n\n @note This concrete type is part of the public API and is ABI stable."]
@@ -2869,6 +2874,12 @@ unsafe extern "C" {
     ) -> LiteRtStatus;
 }
 unsafe extern "C" {
+    pub fn LiteRtGetCompiledModelEnvironment(
+        compiled_model: LiteRtCompiledModel,
+        environment: *mut LiteRtEnvironment,
+    ) -> LiteRtStatus;
+}
+unsafe extern "C" {
     pub fn LiteRtRunCompiledModel(
         compiled_model: LiteRtCompiledModel,
         signature_index: LiteRtParamIndex,
@@ -3039,6 +3050,7 @@ pub const kLiteRtCompilerOptionsPartitionStrategyDefault: LiteRtCompilerOptionsP
 pub const kLiteRtCompilerOptionsPartitionStrategyWeaklyConnected:
     LiteRtCompilerOptionsPartitionStrategy = 1;
 pub type LiteRtCompilerOptionsPartitionStrategy = ::std::os::raw::c_uint;
+pub const kLiteRtCpuKernelModeDelegate: LiteRtCpuKernelMode = 0;
 pub const kLiteRtCpuKernelModeXnnpack: LiteRtCpuKernelMode = 0;
 pub const kLiteRtCpuKernelModeReference: LiteRtCpuKernelMode = 1;
 pub const kLiteRtCpuKernelModeBuiltin: LiteRtCpuKernelMode = 2;

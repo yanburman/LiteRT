@@ -6,6 +6,46 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### LiteRT 2.2.0 support
+
+Vendored headers bumped v2.1.6 → v2.2.0 (`third_party/litert-v2.2.0/`) and
+all six 64-bit binding files regenerated. `wasm32-unknown-emscripten` is
+deliberately left on its 2.1.4-era bindings — its prebuilt tarball is a
+CMake+emscripten build of v2.1.4.
+
+- **BREAKING (Windows only) — `LiteRtLayout` is now 68 bytes on MSVC too.**
+  Through 2.1.6 the struct was `unsigned int rank : 7` + `bool has_strides : 1`,
+  and MSVC refuses to coalesce adjacent bitfields whose underlying types
+  differ, so `dimensions` sat at offset 8 (size 72) on Windows against
+  offset 4 (size 68) everywhere else. Upstream made `has_strides` an
+  `unsigned int : 1` (google-ai-edge/LiteRT#7459) and dropped the `_MSC_VER`
+  branch of the header's own `static_assert`s. **A Windows consumer must
+  upgrade `libLiteRt.dll` to 2.2.0 in lockstep with this release** — pairing
+  these bindings with a 2.1.6 DLL reads every tensor shape shifted by one
+  `i32` (a `[10, 10]` input comes back as `[0, 10]`), with no compile error.
+  Linux/Android/macOS layouts are unchanged.
+- **BREAKING (source) — `LiteRtLayout::has_strides`/`set_has_strides` now
+  take and return `c_uint` rather than `bool`,** following the bitfield's new
+  underlying type. `litert`'s own call site is updated.
+- **New regression test** `litert-sys/tests/layout_abi.rs` pins
+  `LiteRtLayout` and `LiteRtRankedTensorType` sizes and field offsets to the
+  upstream `static_assert`s. `build.rs` runs bindgen with
+  `layout_tests(false)`, so nothing else in the crate catches a binding file
+  that disagrees with the header it came from — which is how the offset bug
+  above shipped the first time.
+- **Additive C API surface**, picked up by the regen: new
+  `LiteRtGetCompiledModelEnvironment`; new enum values
+  `kLiteRtDelegatePrecisionFp16WithFp32Accum` (3),
+  `kLiteRtEnvOptionTagContext` (28), `kLiteRtEnvOptionTagWebGpuFlushCallback`
+  (29); `kLiteRtCpuKernelModeDelegate` added as the new spelling of
+  `kLiteRtCpuKernelModeXnnpack` (both still 0). No function was removed and
+  no existing signature changed — unlike the 2.1.4 → 2.1.6 bump, which
+  shifted arguments across the compiled-model family.
+- **Not bumped:** `LITERT_MAVEN_VERSION` is still `2.1.4`, so the default
+  (no `LITERT_LIB_DIR`) Android path still downloads a 2.1.4 AAR. Consumers
+  must point `LITERT_LIB_DIR` at real 2.2.0 libraries. Ditto `LITERT_LM_TAG`
+  (`v0.10.2`) for the desktop prebuilts.
+
 ## [0.3.0] — WASM (browser + server) support for `litert-sys` / `litert`
 
 First-class `wasm32-unknown-emscripten` target for the base TFLite inference

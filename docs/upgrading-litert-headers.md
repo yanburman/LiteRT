@@ -279,3 +279,107 @@ site: `litert/src/{model,signature,compiled_model,lib}.rs` doc examples,
 `litert/tests/{inference,inference_gpu,lifecycle}.rs`. All of these already
 constructed `Environment` before the `Model::from_file`/`from_bytes` call,
 so it was a mechanical `&env` insertion, not a reordering.
+
+---
+
+# 2.1.6 → 2.2.0 (branch `litert-2.2.0-support`)
+
+Much smaller than the previous bump. **No function was removed and no
+existing signature changed**, so the argument-shift class of failure that
+made 2.1.4 → 2.1.6 a segfault does not apply here. All 329 functions the
+crate binds still exist verbatim, and `LITERT_API_VERSION_{MAJOR,MINOR,PATCH}`
+is unchanged at 0/1/0.
+
+## The one breaking change: `LiteRtLayout` on MSVC
+
+`litert/c/litert_layout.h` changed `bool has_strides : 1` to
+`unsigned int has_strides : 1` (upstream issue 7459) and deleted the
+`_MSC_VER` branch of its `static_assert`s:
+
+| | 2.1.6 MSVC | 2.1.6 Itanium | 2.2.0 (both) |
+|---|---|---|---|
+| `sizeof(LiteRtLayout)` | 72 | 68 | 68 |
+| `offsetof(dimensions)` | 8 | 4 | 4 |
+| `offsetof(strides)` | 40 | 36 | 36 |
+| `sizeof(LiteRtRankedTensorType)` | 76 | 72 | 72 |
+
+So this bump **silently invalidates any Windows `libLiteRt.dll` older than
+2.2.0**. Verified concretely on this branch: with the regenerated 2.2.0
+bindings against the 2.1.6 Windows DLL, `litert/tests/inference.rs` fails
+with `left: [0, 10], right: [10, 10]` — the shape read one `i32` early —
+while `smoke.rs`, `lifecycle.rs`'s non-shape tests, and everything on
+Android still pass. That is the *same* corruption signature as the 2.1.6
+regen bug documented above, just with the ABIs swapped.
+
+Consequences already applied:
+
+- All six 64-bit binding files regenerated; `x86_64-pc-windows-msvc.rs` lost
+  its `__bindgen_padding_0: u32`.
+- `has_strides()`/`set_has_strides()` now take/return `c_uint`, not `bool`.
+  `litert/src/tensor_buffer.rs` passes `0` instead of `false`.
+- New `litert-sys/tests/layout_abi.rs` asserts the sizes and offsets in the
+  table above, so a future regen that disagrees with the vendored header
+  fails a test instead of corrupting shapes at runtime. **This is the check
+  the "before trusting a regen again" note above asked for — it now exists;
+  don't delete it.**
+
+## `LITERT_SYS_BINDGEN_ABI` is still needed
+
+The two passes no longer differ on `LiteRtLayout`, but they still differ on:
+
+- enums without an explicit underlying type (`c_int` under MSVC vs `c_uint`
+  under Itanium) — `LiteRtOpCode`, `LiteRtEventType`, `LiteRtEnvOptionTag`,
+  `LiteRtCpuKernelMode`, `LiteRtQuantizationTypeId`, …
+- trailing flexible-array members (`[T; 1]` vs `__IncompleteArrayField<T>`)
+  in `LiteRtMagicNumberConfigs` / `LiteRtMagicNumberVerifications`
+- the `LITERT_HAS_*_SUPPORT*` platform constants
+
+So keep generating twice, exactly as documented above.
+
+## Everything else is additive
+
+- New: `LiteRtGetCompiledModelEnvironment`.
+- New enum values: `kLiteRtDelegatePrecisionFp16WithFp32Accum` (3),
+  `kLiteRtEnvOptionTagContext` (28),
+  `kLiteRtEnvOptionTagWebGpuFlushCallback` (29). No renumbering.
+- `kLiteRtCpuKernelModeDelegate` is the new spelling of
+  `kLiteRtCpuKernelModeXnnpack`; upstream keeps the old name as an alias and
+  both are still 0.
+- `Lrt{Set,Get}CpuOptionsEnableYNNPack` and
+  `Lrt{Set,Get}GpuOptionsMetalResidencySet` were added upstream but do **not**
+  appear in our bindings — `wrapper.h`'s allowlist is `LiteRt.*`, which has
+  never matched the `Lrt*`-prefixed options functions. Pre-existing, not a
+  2.2.0 regression; widen the allowlist if those are ever wanted.
+- `LrtSetRuntimeOptionsSelectedSignatures` is `#ifdef __cplusplus`-only, so
+  bindgen skips it. `litert_runtime_options.h`'s new `<string>`/`<vector>`
+  includes are behind the same guard and add no bindgen dependency.
+
+## Vendoring notes
+
+- File list is byte-for-byte the same 46 paths as `litert-v2.1.6/`; the
+  include closure pulls in no new `internal/` header. (2.2.0 adds
+  `internal/litert_abi_header.h`, `litert_runtime_api_export.h` and
+  `litert_runtime_builtin.h`, none of which `wrapper.h` reaches.)
+- `build_common/build_config.h.in` is **unchanged** between 2.1.6 and 2.2.0,
+  so the hand-written `build_config.h` was carried over again — the caveat
+  at the top of this doc was re-checked and still holds.
+- `LICENSE` is unchanged upstream.
+- The linker version script only gained `kLiteRtRuntimeBuiltin`; nothing was
+  un-exported.
+
+## Still not done
+
+- **No 2.2.0 binaries exist locally yet.** `cam_poc_materials` has
+  `lite_rt_bin`, `_2.1.5` and `_2.1.6` only. Everything above was validated
+  against 2.1.6 libraries, which is why the shape-carrying Windows tests
+  fail (correctly). `cam_poc`'s `Cargo.toml` is deliberately *not* pointed at
+  this branch yet.
+- `LITERT_MAVEN_VERSION` / `ANDROID_AAR_SHA256` / `ANDROID_AAR_SIZE` still
+  pin the 2.1.4 AAR, and `LITERT_LM_TAG` still pins `v0.10.2` desktop
+  prebuilts. Both need a network fetch to re-pin.
+- Pre-existing and untouched by this branch: `cargo clippy -- -D warnings`
+  fails on a `collapsible_if` in `build.rs`'s `cache_root()`, `cargo fmt
+  --check` wants to reflow `WASM32_EMSCRIPTEN_TARBALL_URL`, the
+  `gpu_options_cache` / `inference_gpu` tests fail on this host for lack of
+  `dxil.dll`, and the `GpuOptions` doctest fails to compile. All four
+  reproduce identically on the 2.1.6 branch.

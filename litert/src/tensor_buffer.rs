@@ -30,7 +30,11 @@ impl TensorShape {
     pub(crate) fn to_raw(&self) -> sys::LiteRtRankedTensorType {
         let mut layout = sys::LiteRtLayout::default();
         layout.set_rank(u32::try_from(self.dims.len()).expect("rank fits in u32"));
-        layout.set_has_strides(false);
+        // LiteRT 2.2.0 changed `has_strides` from a `bool : 1` bitfield to an
+        // `unsigned int : 1` one (upstream issue 7459) so that it packs into
+        // the same storage unit as `rank` under MSVC as well as Itanium —
+        // hence `0`/`1` here rather than a `bool`.
+        layout.set_has_strides(0);
         for (slot, &d) in layout.dimensions.iter_mut().zip(self.dims.iter()) {
             *slot = d;
         }
